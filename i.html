@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Healthy Cities - Global Environmental Monitor</title>
+    
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    
+    <link rel="stylesheet" href="c7.css">
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <div class="logo">
+                <i class="fas fa-leaf"></i>
+                Healthy Cities
+            </div>
+            <ul class="nav-links">
+                <li><a href="#search" data-section="search">Search</a></li>
+                <li><a href="#rankings" data-section="rankings">Rankings</a></li>
+                <li><a id="resourcesLink"><i class="fas fa-newspaper"></i> Resources</a></li>
+                <li><a href="#slogans" data-section="slogans">Take Action</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="container" id="mainPage">
+        <div class="search-section" id="search">
+            <h2 style="margin-bottom: 1.5rem; color: #333;">Discover Your City's Health Score</h2>
+            <div class="search-box">
+                <input type="text" class="search-input" id="cityInput" placeholder="Enter city name (e.g., New York, London, Tokyo)">
+                <button class="search-btn" id="searchButton">
+                    <i class="fas fa-search"></i> Search
+                </button>
+            </div>
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>Fetching environmental data...</p>
+            </div>
+        </div>
+
+        <div id="resultsSection" class="hidden">
+            <div id="map"></div>
+
+            <div class="results-grid">
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-tree"></i>
+                        Green Score
+                    </div>
+                    <div class="score-display">
+                        <div class="score-circle" id="greenScoreCircle">--</div>
+                        <p id="greenScoreText">Calculating...</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-wind"></i>
+                        Air Quality Index
+                    </div>
+                    <div class="score-display">
+                        <div class="mood-animation" id="moodEmoji">🌍</div>
+                        <h3 id="aqiValue">--</h3>
+                        <p id="aqiStatus">--</p>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-title">
+                        <i class="fas fa-temperature-high"></i>
+                        Climate & Weather
+                    </div>
+                    <div id="weatherInfo">
+                        <p><strong>Temperature:</strong> <span id="temp">--</span></p>
+                        <p><strong>Humidity:</strong> <span id="humidity">--</span></p>
+                        <p><strong>Conditions:</strong> <span id="conditions">--</span></p>
+                        <p><strong>Wind Speed:</strong> <span id="wind">--</span></p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chart-container">
+                <h3 style="margin-bottom: 1.5rem; color: #333;">
+                    <i class="fas fa-chart-line"></i> Air Quality Trends
+                </h3>
+                <div class="tab-buttons" id="chartTabButtons">
+                    <button class="tab-btn active" data-period="24h">24 Hours</button>
+                    <button class="tab-btn" data-period="week">Week</button>
+                    <button class="tab-btn" data-period="year">Year</button>
+                </div>
+                <canvas id="aqiChart"></canvas>
+            </div>
+        </div>
+
+        <div class="ranking-section" id="rankings">
+            <h2 style="margin-bottom: 1.5rem; color: #333;">
+                <i class="fas fa-trophy"></i> Global Air Quality Rankings
+            </h2>
+            <div id="rankingsList"></div>
+        </div>
+
+        <div class="slogan-section" id="slogans">
+            <div class="slogan">🌱 Every Action Counts</div>
+            <p style="font-size: 1.2rem; margin-bottom: 2rem;">Join the movement for healthier cities and a sustainable future</p>
+            <div style="max-width: 800px; margin: 0 auto; text-align: left;">
+                <h3 style="margin-bottom: 1rem;">What You Can Do:</h3>
+                <ul style="line-height: 2;">
+                    <li>🚶 Walk or bike for short distances instead of driving</li>
+                    <li>🌳 Plant trees and maintain green spaces in your community</li>
+                    <li>♻ Reduce, reuse, and recycle to minimize waste</li>
+                    <li>🏡 Support local green initiatives and urban gardens</li>
+                    <li>💡 Choose energy-efficient appliances and renewable energy</li>
+                    <li>🗣 Advocate for better urban planning and environmental policies</li>
+                    <li>👥 Educate others about environmental health issues</li>
+                </ul>
+            </div>
+            <div style="margin-top: 3rem; font-style: italic; font-size: 1.3rem;">
+                "The Earth does not belong to us. We belong to the Earth." - Chief Seattle
+            </div>
+        </div>
+    </div>
+
+    <div class="container hidden" id="resourcesPage">
+        <button class="search-btn" id="backToMainButton" style="margin-bottom: 2rem;">
+            <i class="fas fa-arrow-left"></i> Back to Main
+        </button>
+        
+        <div style="background: white; border-radius: 20px; padding: 2rem; margin-bottom: 2rem;">
+            <h2 style="color: #333; margin-bottom: 1.5rem;">
+                <i class="fas fa-newspaper"></i> Environmental News & Updates
+            </h2>
+            <p style="color: #666; margin-bottom: 2rem;">Latest news on climate change, environmental disasters, and health impacts worldwide</p>
+            <div id="newsFeed" class="news-grid"></div>
+        </div>
+
+        <div style="background: white; border-radius: 20px; padding: 2rem;">
+            <h2 style="color: #d32f2f; margin-bottom: 1.5rem;">
+                <i class="fas fa-exclamation-triangle"></i> Recent Environmental Alerts
+            </h2>
+            <div id="alertsFeed"></div>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <p><strong>Healthy Cities Project</strong> - Making urban environments better for everyone</p>
+        <p style="margin-top: 0.5rem; color: #666;">Data sources: OpenWeatherMap, WAQI, NewsAPI</p>
+    </footer>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0"></script>
+    
+    <script src="a7.js"></script>
+</body>
+</html>
